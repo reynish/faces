@@ -15,15 +15,24 @@ import {
     CameraControls,
 } from "@react-three/drei";
 import { useLoader } from "@react-three/fiber";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+
+type GLTFResult = GLTF & {
+  nodes: {
+    Pyramid: THREE.Mesh
+  };
+  materials: {
+    ['default']: THREE.MeshStandardMaterial;
+  };
+};
 
 function Head() {
     // const gltf = useLoader(GLTFLoader, "/models/head.gltf");
-    const { nodes } = useGLTF("/models/head.gltf");
+    const { nodes } = useGLTF("/models/head.gltf") as GLTFResult;
     const texture = useTexture("/texture_100x100.png");
     // const head = useGLTF("/models/head.gltf");
     const ref = useRef();
-    useFrame((state, delta) => (ref.current.rotation.z += delta));
+    useFrame((state, delta) => (ref ? ref.current.rotation.z += delta));
     return (
         <group>
             {/* <Center top> */}
