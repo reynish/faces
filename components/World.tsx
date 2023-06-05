@@ -3,36 +3,33 @@
 import React, { useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
-    Grid,
-    Center,
-    AccumulativeShadows,
-    RandomizedLight,
-    Environment,
     useGLTF,
     useTexture,
     PerspectiveCamera,
     Decal,
-    CameraControls,
+    Stats,
+    OrbitControls,
 } from "@react-three/drei";
 import { useLoader } from "@react-three/fiber";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import * as THREE from "three";
 
 type GLTFResult = GLTF & {
-  nodes: {
-    Pyramid: THREE.Mesh
-  };
-  materials: {
-    ['default']: THREE.MeshStandardMaterial;
-  };
+    nodes: {
+        Busto: THREE.Mesh;
+    };
+    materials: {
+        ["default"]: THREE.MeshStandardMaterial;
+    };
 };
 
 function Head() {
-    // const gltf = useLoader(GLTFLoader, "/models/head.gltf");
     const { nodes } = useGLTF("/models/head.gltf") as GLTFResult;
     const texture = useTexture("/texture_100x100.png");
-    // const head = useGLTF("/models/head.gltf");
-    const ref = useRef();
-    useFrame((state, delta) => (ref ? ref.current.rotation.z += delta));
+    const ref = useRef<any>();
+    useFrame((state, delta) =>
+        ref && ref.current ? (ref.current.rotation.z += delta) : null
+    );
     return (
         <group>
             {/* <Center top> */}
@@ -65,6 +62,10 @@ export default function World() {
             <PerspectiveCamera position={[0, 0, 0.5]} makeDefault />
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
+            <gridHelper />
+            <axesHelper />
+            <Stats />
+            <OrbitControls />
             <Head></Head>
         </Canvas>
     );
